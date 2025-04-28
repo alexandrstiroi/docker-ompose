@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  data_miner:
+    build: ./data_miner
+    restart: always
+    depends_on: postgres
+    environment:
+      DB_PATPH: ${DB_PATH}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:8080"
+    
+  telegra_data_miner:
+    build: ./telegram_data_miner
+    restart: always
+    depends_on: postgres
+    environment:
+      DB_PATPH: ${DB_PATH}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      BOT_TOKEN: ${BOT_TOKEN}
+      BOT_NAME: ${BOT_NAME}
+      BOT_PIN: ${BOT_PIN}
+      BASE_URL: ${BASE_URL}
+    ports:
+      - "8080:8080"
+      
+volumes:
+  postgres_data:      
