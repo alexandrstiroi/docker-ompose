@@ -12,7 +12,7 @@ services:
     networks:
       - backend  
       
-  data_miner:
+  data-miner:
     build: ./data_miner
     restart: always
     depends_on: 
